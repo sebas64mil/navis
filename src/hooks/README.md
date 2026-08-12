@@ -4,16 +4,20 @@
 
 Contains reusable custom React hooks for shared behavior.
 
-## What belongs here
+## Current Usage
+
+The main hook here is the translation helper, which now resolves both strings and structured FAQ content.
+
+## What Belongs Here
 
 - Cross-feature hooks for translation, interaction, or derived state.
 - Hooks that wrap stable shared services or store selectors.
 
-## What should not be placed here
+## What Should Not Be Placed Here
 
 - Full feature workflows.
 - Direct UI component definitions.
 
-## Relationship with the project
+## Relationship With the Project
 
 Hooks provide ergonomic access to shared capabilities and are consumed by components and features.

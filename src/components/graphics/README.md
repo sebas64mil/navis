@@ -4,16 +4,20 @@
 
 Contains reusable visual helpers related to graphical presentation.
 
-## What belongs here
+## Current Usage
+
+This folder is reserved for shared visual wrappers and rendering helpers that support the UI and scene layers without owning scene logic.
+
+## What Belongs Here
 
 - Shared visual wrappers used by 2D/3D presentation layers.
 - Non-domain rendering utilities that support UI scenes.
 
-## What should not be placed here
+## What Should Not Be Placed Here
 
-- Core Three.js scene orchestration (belongs to `src/three/`).
+- Core Three.js scene orchestration, which belongs to `src/three/`.
 - Domain-specific feature logic.
 
-## Relationship with the project
+## Relationship With the Project
 
 Acts as a bridge between reusable UI composition and rendering-oriented components.

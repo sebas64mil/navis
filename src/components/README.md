@@ -2,19 +2,23 @@
 
 ## Purpose
 
-Hosts reusable presentation components used across features.
+Hosts reusable presentation components used across the application.
 
-## What belongs here
+## Current Usage
 
-- `ui/`: basic reusable controls.
-- `layout/`: structural wrappers and navigation layout elements.
-- `graphics/`: non-scene visual components and rendering helpers.
+This layer now covers the main navigation shell, the floating search experience, and the popups that support the current campus workflow.
 
-## What should not be placed here
+## What Belongs Here
+
+- `ui/`: basic reusable controls such as the search input and buttons.
+- `layout/`: structural wrappers, sidebar navigation, and page composition.
+- `graphics/`: non-scene visual helpers and rendering support components.
+
+## What Should Not Be Placed Here
 
 - Business rules, data fetching logic, or store mutations.
 - Feature-specific orchestration that cannot be reused.
 
-## Relationship with the project
+## Relationship With the Project
 
-Components in this module are consumed by feature screens and core composition points to keep UI patterns consistent.
+Components in this module are consumed by feature screens and core composition points to keep interaction patterns and layout behavior consistent.

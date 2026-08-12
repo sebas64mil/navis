@@ -4,16 +4,20 @@
 
 Stores shared TypeScript contracts used across modules.
 
-## What belongs here
+## Current Usage
+
+The current type layer defines the campus location model and its category union, which are reused by services, store state, and UI props.
+
+## What Belongs Here
 
 - Domain model interfaces and type aliases.
 - Cross-layer contracts reused by services, store, and features.
 
-## What should not be placed here
+## What Should Not Be Placed Here
 
 - Executable runtime logic.
 - Module-specific private types that are only used in one file.
 
-## Relationship with the project
+## Relationship With the Project
 
 Type definitions enforce consistency between service responses, state structures, and component props.

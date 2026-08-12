@@ -5,7 +5,7 @@ export function useTranslation() {
   const language = useAppStore((state) => state.language);
   const setLanguage = useAppStore((state) => state.setLanguage);
 
-  const t = (path: string): string => {
+  const t = (path: string): any => {
     const keys = path.split('.');
     let current: unknown = translations[language];
 
@@ -17,7 +17,7 @@ export function useTranslation() {
       }
     }
 
-    return typeof current === 'string' ? current : path;
+    return current;
   };
 
   return { t, language, setLanguage };

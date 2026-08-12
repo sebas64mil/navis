@@ -17,6 +17,7 @@ export const LocationCard: React.FC<LocationCardProps> = ({
   compact = false,
 }) => {
   const { t } = useTranslation();
+  const categoryLabel = t(`categories.${location.category}`) as string;
 
   return (
     <div
@@ -67,7 +68,7 @@ export const LocationCard: React.FC<LocationCardProps> = ({
             letterSpacing: '0.05em',
           }}
         >
-          {location.category}
+          #{categoryLabel}
         </span>
 
         <h3

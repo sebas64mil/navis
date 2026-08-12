@@ -2,19 +2,23 @@
 
 ## Purpose
 
-Provides application structure components that arrange screens and navigation regions.
+Provides the application structure that arranges screens, navigation regions, and popups.
 
-## What belongs here
+## Current Usage
+
+This folder contains the current left navigation shell, the floating search panel, and the page composition used by the 3D scene.
+
+## What Belongs Here
 
 - Main page shells and containers.
-- Sidebars, headers, and structural panels.
-- Layout components shared by multiple routes.
+- Sidebars, drawers, and structural panels.
+- Layout components shared by multiple routes or viewport states.
 
-## What should not be placed here
+## What Should Not Be Placed Here
 
 - Low-level UI primitives that belong to `ui/`.
 - Feature-specific business behavior.
 
-## Relationship with the project
+## Relationship With the Project
 
-Layout components assemble core and feature modules into consistent page structures.
+Layout components assemble core and feature modules into the visible page structure. They are also the right place for viewport-level positioning rules such as the floating search panel and portal-based popups.

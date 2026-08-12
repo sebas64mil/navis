@@ -2,22 +2,29 @@
 
 ## Purpose
 
-Stores static assets served directly by the frontend runtime.
+Contains static assets served directly by the frontend runtime.
 
-## What belongs here
+## Current Usage
 
-- Environment assets and map resources in `environment/`.
-- Brand and UI visual assets in `icons/` and `images/`.
-- Reusable 3D asset files in `models/` and `textures/`.
-- Fonts and typography resources in `fonts/`.
-- Global static files such as `favicon.svg`.
+The current Navis build treats this folder as the asset source for the campus experience, including:
 
-## What should not be placed here
+- `environment/` for scene or deployment-specific files.
+- `icons/` and `images/` for brand and UI visuals.
+- `models/` and `textures/` for 3D placeholders and scene assets.
+- `fonts/` for typography resources.
+
+## What Belongs Here
+
+- Static files that must be available at runtime without bundling.
+- Test or placeholder models for the 3D scene.
+- Images and icons used by the search, sidebar, and supporting screens.
+
+## What Should Not Be Placed Here
 
 - Application logic, React components, hooks, or services.
 - Runtime-generated files.
 - Build output artifacts.
 
-## Relationship with the project
+## Relationship With the Project
 
-Files in this folder are consumed by the UI layer and 3D modules through static paths. It is the asset source for environment-specific deployments.
+The UI layer and 3D modules consume these assets through static paths. This folder is the right place for environment presets, visual references, and the test models that are planned next.
