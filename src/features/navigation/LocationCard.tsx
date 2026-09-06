@@ -1,7 +1,6 @@
 import React from 'react';
 import type { Location } from '../../types/location';
 import { Button } from '../../components/ui/Button';
-import { useTranslation } from '../../hooks/useTranslation';
 
 export interface LocationCardProps {
   location: Location;
@@ -16,8 +15,7 @@ export const LocationCard: React.FC<LocationCardProps> = ({
   isSelected = false,
   compact = false,
 }) => {
-  const { t } = useTranslation();
-  const categoryLabel = t(`categories.${location.category}`) as string;
+  const categoryLabel = location.category;
 
   return (
     <div
@@ -111,7 +109,7 @@ export const LocationCard: React.FC<LocationCardProps> = ({
                 onSelect(location.id);
               }}
             >
-              {isSelected ? t('location.selected') : t('location.select')}
+              {isSelected ? 'Ubicación actual' : 'Ir a la ubicación'}
             </Button>
           </div>
         )}

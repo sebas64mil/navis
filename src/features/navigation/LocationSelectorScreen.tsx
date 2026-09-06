@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import type { Location } from '../../types/location';
-import { searchLocations } from '../../services/locationService';
+import { searchLocations } from './locationService';
 import { LocationCard } from './LocationCard';
 import { SearchBar } from '../../components/ui/SearchBar';
 import { Button } from '../../components/ui/Button';
-import { useTranslation } from '../../hooks/useTranslation';
 import { useAppStore } from '../../store/useAppStore';
 
 export const LocationSelectorScreen: React.FC = () => {
-  const { t, language, setLanguage } = useTranslation();
   const theme = useAppStore((state) => state.theme);
   const toggleTheme = useAppStore((state) => state.toggleTheme);
   const setSelectedLocationId = useAppStore((state) => state.setSelectedLocationId);
@@ -77,16 +75,8 @@ export const LocationSelectorScreen: React.FC = () => {
 
         {/* Controls */}
         <div style={{ display: 'flex', gap: 'var(--spacing-sm)', alignItems: 'center' }}>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setLanguage(language === 'en' ? 'es' : 'en')}
-          >
-            🌐 {language === 'en' ? 'Español' : 'English'}
-          </Button>
-
           <Button variant="outline" size="sm" onClick={toggleTheme}>
-            {theme === 'light' ? '🌙 ' + t('theme.toggleDark') : '☀️ ' + t('theme.toggleLight')}
+            {theme === 'light' ? '🌙 Modo oscuro' : '☀️ Modo claro'}
           </Button>
         </div>
       </header>
@@ -111,7 +101,7 @@ export const LocationSelectorScreen: React.FC = () => {
               color: 'var(--color-text-primary)',
             }}
           >
-            {t('app.title')}
+            Plataforma de Navegación 3D
           </h1>
           <p
             style={{
@@ -121,7 +111,7 @@ export const LocationSelectorScreen: React.FC = () => {
               lineHeight: 1.6,
             }}
           >
-            {t('app.subtitle')}
+            Seleccione una ubicación para iniciar la vista 3D interactiva
           </p>
         </div>
 
@@ -129,7 +119,7 @@ export const LocationSelectorScreen: React.FC = () => {
           <SearchBar
             value={query}
             onChange={setQuery}
-            placeholder={t('navigation.searchPlaceholder')}
+            placeholder="Buscar ubicaciones..."
           />
         </div>
 
@@ -157,7 +147,7 @@ export const LocationSelectorScreen: React.FC = () => {
                 color: 'var(--color-text-muted)',
               }}
             >
-              {t('navigation.noResults')}
+              No se encontraron ubicaciones
             </div>
           )}
         </div>

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import type { Location } from '../../types/location';
-import { searchLocations } from '../../services/locationService';
+import { searchLocations } from '../../features/navigation/locationService';
 import { SearchBar } from '../ui/SearchBar';
-import { useTranslation } from '../../hooks/useTranslation';
 import { useAppStore } from '../../store/useAppStore';
 
 /* ─── location list item (adapted from Sidebar) ─────────────────────────────── */
@@ -82,8 +81,6 @@ const LocationItem: React.FC<{
 );
 
 export const FloatingSearchPanel: React.FC = () => {
-  const { t } = useTranslation();
-  
   const searchQuery = useAppStore((s) => s.searchQuery);
   const setSearchQuery = useAppStore((s) => s.setSearchQuery);
   const activeCategory = useAppStore((s) => s.activeCategory);
@@ -135,7 +132,7 @@ export const FloatingSearchPanel: React.FC = () => {
         <SearchBar
           value={searchQuery}
           onChange={handleSearchChange}
-          placeholder={t('navigation.searchPlaceholder') as string}
+          placeholder="Buscar ubicaciones..."
         />
       </div>
 
@@ -174,7 +171,7 @@ export const FloatingSearchPanel: React.FC = () => {
                      padding: '4px 10px',
                    }}
                  >
-                   {t('navigation.clearFilter') as string}
+                   Quitar filtro
                  </button>
                )}
                <button
@@ -206,7 +203,7 @@ export const FloatingSearchPanel: React.FC = () => {
                   fontSize: 'var(--font-size-sm)',
                 }}
               >
-                {t('navigation.noResults') as string}
+                No se encontraron ubicaciones
               </div>
             ) : (
               filteredLocations.map((loc) => (
@@ -214,7 +211,7 @@ export const FloatingSearchPanel: React.FC = () => {
                   key={loc.id}
                   loc={loc}
                   isSelected={loc.id === selectedLocationId}
-                  categoryLabel={t(`categories.${loc.category}`) as string}
+                  categoryLabel={loc.category}
                   onSelect={(id) => setSelectedLocationId(id === selectedLocationId ? null : id)}
                 />
               ))

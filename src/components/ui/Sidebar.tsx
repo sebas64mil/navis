@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Menu, X, GraduationCap, Building2, Briefcase, HelpCircle, Info, Sun, Moon } from 'lucide-react';
+import { Menu, X, GraduationCap, Building2, Briefcase, HelpCircle, Info } from 'lucide-react';
 import type { LocationCategory } from '../../types/location';
-import { useTranslation } from '../../hooks/useTranslation';
 import { useAppStore } from '../../store/useAppStore';
 
 /* ─── divider ───────────────────────────────────────────────────────────────── */
@@ -16,6 +15,15 @@ const Divider = () => (
     }}
   />
 );
+
+const FAQ_QUESTIONS = [
+  { label: '¿Dónde se paga la matrícula?', places: [{ id: 'tesoreria', name: 'Tesorería y Pagos' }] },
+  { label: '¿Dónde saco un certificado de notas?', places: [{ id: 'registro-control', name: 'Registro y Control' }] },
+  { label: '¿Dónde me pueden atender si me siento mal?', places: [{ id: 'bienestar-universitario', name: 'Bienestar Universitario' }] },
+  { label: '¿Dónde están los laboratorios de electrónica?', places: [{ id: 'facultad-ingenieria', name: 'Facultad de Ingeniería' }] },
+  { label: '¿Dónde me puedo inscribir como estudiante nuevo?', places: [{ id: 'admisiones', name: 'Admisiones' }] },
+  { label: '¿Dónde puedo imprimir o usar un computador?', places: [{ id: 'sala-sistemas', name: 'Sala de Sistemas' }] },
+];
 
 /* ─── overlay modal (for FAQ/About) ─────────────────────────────────────────── */
 interface OverlayProps {
@@ -79,11 +87,10 @@ const Overlay: React.FC<OverlayProps> = ({ title, onClose, children }) => (
    THIN SIDEBAR
 ══════════════════════════════════════════════════════════════════════════════ */
 export const Sidebar: React.FC = () => {
-  const { t, language, setLanguage } = useTranslation();
-  
   const activeCategory = useAppStore((s) => s.activeCategory);
   const setActiveCategory = useAppStore((s) => s.setActiveCategory);
   const setSearchPanelOpen = useAppStore((s) => s.setSearchPanelOpen);
+  const setSelectedLocationId = useAppStore((s) => s.setSelectedLocationId);
   
   const isSettingsOpen = useAppStore((s) => s.isSettingsOpen);
   const setSettingsOpen = useAppStore((s) => s.setSettingsOpen);
@@ -91,10 +98,9 @@ export const Sidebar: React.FC = () => {
   const setFaqOpen = useAppStore((s) => s.setFaqOpen);
   const isAboutOpen = useAppStore((s) => s.isAboutOpen);
   const setAboutOpen = useAppStore((s) => s.setAboutOpen);
-  const theme = useAppStore((s) => s.theme);
-  const toggleTheme = useAppStore((s) => s.toggleTheme);
 
-  const [faqAnswer, setFaqAnswer] = useState<string[] | null>(null);
+
+  const [faqAnswer, setFaqAnswer] = useState<{ id: string; name: string }[] | null>(null);
 
   const categories: { key: LocationCategory; icon: React.ReactNode }[] = [
     { key: 'facultad', icon: <GraduationCap size={20} /> },
@@ -103,9 +109,9 @@ export const Sidebar: React.FC = () => {
   ];
 
   const categoryLabel: Record<LocationCategory, string> = {
-    facultad: t('categories.facultad') as string,
-    administrativo: t('categories.administrativo') as string,
-    servicios: t('categories.servicios') as string,
+    facultad: 'Facultades',
+    administrativo: 'Administración',
+    servicios: 'Servicios',
   };
 
   const SIDEBAR_W = 56;
@@ -131,7 +137,7 @@ export const Sidebar: React.FC = () => {
         {/* ── TOP: Hamburger Menu / Close ──────────────────────────────── */}
         <div style={{ padding: '12px 8px 8px', width: '100%' }}>
           <button
-            title={t('sidebar.settings') as string}
+            title="Configuración"
             onClick={(e) => {
               e.stopPropagation();
               setSettingsOpen(!isSettingsOpen);
@@ -202,7 +208,7 @@ export const Sidebar: React.FC = () => {
         <div style={{ padding: '8px', display: 'flex', flexDirection: 'column', gap: 8, width: '100%', paddingBottom: 16 }}>
           <Divider />
           <button
-            title={t('sidebar.faq') as string}
+            title="Preguntas frecuentes"
             onClick={() => { setFaqAnswer(null); setFaqOpen(true); }}
             style={{
               width: 40,
@@ -224,7 +230,7 @@ export const Sidebar: React.FC = () => {
             <HelpCircle size={22} />
           </button>
           <button
-            title={t('sidebar.about') as string}
+            title="Acerca de"
             onClick={() => setAboutOpen(true)}
             style={{
               width: 40,
@@ -252,7 +258,7 @@ export const Sidebar: React.FC = () => {
          FAQ OVERLAY
       ══════════════════════════════════════════════════════════════════ */}
       {isFaqOpen && createPortal(
-        <Overlay title={t('faq.title') as string} onClose={() => { setFaqOpen(false); setFaqAnswer(null); }}>
+        <Overlay title="Preguntas frecuentes" onClose={() => { setFaqOpen(false); setFaqAnswer(null); }}>
           <p
             style={{
               margin: '0 0 16px',
@@ -260,7 +266,7 @@ export const Sidebar: React.FC = () => {
               color: 'var(--color-text-secondary)',
             }}
           >
-            {t('faq.subtitle') as string}
+            ¿En qué te podemos ayudar?
           </p>
 
           {faqAnswer ? (
@@ -283,7 +289,7 @@ export const Sidebar: React.FC = () => {
                     marginBottom: 8,
                   }}
                 >
-                  {language === 'es' ? 'Lugares relacionados' : 'Related places'}
+                  Lugares relacionados
                 </div>
                 {faqAnswer.map((place) => (
                   <button
@@ -337,12 +343,12 @@ export const Sidebar: React.FC = () => {
                   color: 'var(--color-text-secondary)',
                 }}
               >
-                ← {language === 'es' ? 'Volver' : 'Back'}
+                ← Volver
               </button>
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {(t('faq.questions') as unknown as { label: string; places: {id: string, name: string}[] }[]).map((q, i) => (
+              {FAQ_QUESTIONS.map((q, i) => (
                 <button
                   key={i}
                   onClick={() => setFaqAnswer(q.places)}
@@ -384,7 +390,7 @@ export const Sidebar: React.FC = () => {
          ABOUT OVERLAY
       ══════════════════════════════════════════════════════════════════ */}
       {isAboutOpen && createPortal(
-        <Overlay title={t('about.title') as string} onClose={() => setAboutOpen(false)}>
+        <Overlay title="Acerca del aplicativo" onClose={() => setAboutOpen(false)}>
           <p
             style={{
               margin: 0,
@@ -394,7 +400,9 @@ export const Sidebar: React.FC = () => {
               whiteSpace: 'pre-line',
             }}
           >
-            {t('about.body') as string}
+            Navis 3D es una plataforma de navegación interactiva diseñada para ayudar a estudiantes y visitantes a explorar el campus universitario en un entorno 3D inmersivo.
+
+            Usa el panel izquierdo para buscar ubicaciones por categoría, realizar búsquedas directas y resolver tus dudas frecuentes.
           </p>
         </Overlay>,
         document.body,

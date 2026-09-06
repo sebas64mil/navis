@@ -1,12 +1,14 @@
 import { create } from 'zustand';
-import type { SupportedLanguage } from '../core/i18n';
 import type { LocationCategory } from '../types/location';
+import type { NavigationNode } from '../types/navigation';
 
 export type AppTheme = 'light' | 'dark';
 
 interface AppState {
   // Navigation / location
   selectedLocationId: string | null;
+  routePath: number[] | null;
+  navigationNodes: NavigationNode[];
   searchQuery: string;
   activeCategory: LocationCategory | null;
   
@@ -20,10 +22,11 @@ interface AppState {
 
   // Appearance
   theme: AppTheme;
-  language: SupportedLanguage;
 
   // Actions
   setSelectedLocationId: (id: string | null) => void;
+  setRoutePath: (path: number[] | null) => void;
+  setNavigationNodes: (nodes: NavigationNode[]) => void;
   setSearchQuery: (query: string) => void;
   setActiveCategory: (cat: LocationCategory | null) => void;
   setSearchPanelOpen: (open: boolean) => void;
@@ -34,11 +37,12 @@ interface AppState {
 
   setTheme: (theme: AppTheme) => void;
   toggleTheme: () => void;
-  setLanguage: (lang: SupportedLanguage) => void;
 }
 
 export const useAppStore = create<AppState>((set) => ({
   selectedLocationId: null,
+  routePath: null,
+  navigationNodes: [],
   searchQuery: '',
   activeCategory: null,
   
@@ -49,9 +53,10 @@ export const useAppStore = create<AppState>((set) => ({
   isAboutOpen: false,
 
   theme: 'dark',
-  language: 'es',
 
   setSelectedLocationId: (id) => set({ selectedLocationId: id }),
+  setRoutePath: (path) => set({ routePath: path }),
+  setNavigationNodes: (nodes) => set({ navigationNodes: nodes }),
   setSearchQuery: (query) => set({ searchQuery: query }),
   setActiveCategory: (cat) => set({ activeCategory: cat, isSearchPanelOpen: cat !== null }),
   setSearchPanelOpen: (open) => set({ isSearchPanelOpen: open }),
@@ -62,5 +67,4 @@ export const useAppStore = create<AppState>((set) => ({
 
   setTheme: (theme) => set({ theme }),
   toggleTheme: () => set((state) => ({ theme: state.theme === 'light' ? 'dark' : 'light' })),
-  setLanguage: (lang) => set({ language: lang }),
 }));
