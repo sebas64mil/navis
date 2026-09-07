@@ -10,6 +10,44 @@ export interface DijkstraResult {
   distance: number;
 }
 
+export const findPath = (
+  nodes: NavigationNode[],
+  startNodeId: number,
+  destinationNodeId: number,
+): number[] | null => {
+  const knownNodeIds = new Set(nodes.map((node) => node.id));
+  if (!knownNodeIds.has(startNodeId) || !knownNodeIds.has(destinationNodeId)) return null;
+
+  const queue: number[] = [startNodeId];
+  const previous = new Map<number, number | null>([[startNodeId, null]]);
+
+  while (queue.length > 0) {
+    const currentId = queue.shift();
+    if (currentId === undefined) break;
+    if (currentId === destinationNodeId) break;
+
+    const currentNode = nodes.find((node) => node.id === currentId);
+    if (!currentNode) continue;
+
+    currentNode.connections.forEach((connectionId) => {
+      if (!knownNodeIds.has(connectionId) || previous.has(connectionId)) return;
+      previous.set(connectionId, currentId);
+      queue.push(connectionId);
+    });
+  }
+
+  if (!previous.has(destinationNodeId)) return null;
+
+  const path: number[] = [];
+  let currentId: number | null = destinationNodeId;
+  while (currentId !== null) {
+    path.unshift(currentId);
+    currentId = previous.get(currentId) ?? null;
+  }
+
+  return path;
+};
+
 
 /* =========================================================
    CALCULAR DISTANCIA ENTRE DOS NODOS
@@ -19,19 +57,9 @@ export const calculateDistance = (
   nodeA: NavigationNode,
   nodeB: NavigationNode
 ): number => {
-
-  const [ax, ay, az] = nodeA.position;
-  const [bx, by, bz] = nodeB.position;
-
-  const dx = bx - ax;
-  const dy = by - ay;
-  const dz = bz - az;
-
-  return Math.sqrt(
-    dx * dx +
-    dy * dy +
-    dz * dz
-  );
+  void nodeA;
+  void nodeB;
+  return 1;
 };
 
 

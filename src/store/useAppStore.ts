@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import type { LocationCategory } from '../types/location';
 import type { NavigationNode } from '../types/navigation';
+import { navigationNodes } from '../features/navigation/navigationNodes';
 
 export type AppTheme = 'light' | 'dark';
 
@@ -42,7 +43,7 @@ interface AppState {
 export const useAppStore = create<AppState>((set) => ({
   selectedLocationId: null,
   routePath: null,
-  navigationNodes: [],
+  navigationNodes,
   searchQuery: '',
   activeCategory: null,
   

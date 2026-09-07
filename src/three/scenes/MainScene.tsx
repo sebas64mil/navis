@@ -1,11 +1,12 @@
 
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { useAppStore } from '../../store/useAppStore';
-import { NavigationNode } from '../Components/NavigationNode';
+import { NavigationNodeView } from '../Components/NavigationNode';
 import { NodeConnection } from '../Components/NodeConnection';
-import type { NavigationNode as NavigationNodeData, NavigationNodeProps } from '../../types/navigation';
+import { navigationNodes } from '../../features/navigation/navigationNodes';
+import type { NavigationNodeProps } from '../../types/navigation';
 
 
 
@@ -15,31 +16,14 @@ interface NavigationGraphProps {
 }
 
 const NavigationGraph: React.FC<NavigationGraphProps> = ({ routePath, children }) => {
-  const [nodes, setNodes] = useState<NavigationNodeData[]>([]);
-  const setNavigationNodes = useAppStore((state) => state.setNavigationNodes);
-
-  const handleRegister = useCallback((registeredNode: NavigationNodeData) => {
-    setNodes((currentNodes) => {
-      const existingNode = currentNodes.find((node) => node.id === registeredNode.id);
-      if (
-        existingNode &&
-        existingNode.position.every((value, index) => value === registeredNode.position[index]) &&
-        existingNode.connections.join(',') === registeredNode.connections.join(',')
-      ) {
-        return currentNodes;
-      }
-
-      const nextNodes = [
-        ...currentNodes.filter((node) => node.id !== registeredNode.id),
-        registeredNode,
-      ].sort((first, second) => first.id - second.id);
-      setNavigationNodes(nextNodes);
-      return nextNodes;
-    });
-  }, [setNavigationNodes]);
+  const visualNodes = React.Children.toArray(children).flatMap((child) => {
+    if (!React.isValidElement(child)) return [];
+    const element = child as React.ReactElement<NavigationNodeProps>;
+    return [{ id: element.props.nodeId, position: element.props.position }];
+  });
 
   const getNodePosition = (nodeId: number) =>
-    nodes.find((node) => node.id === nodeId)?.position ?? [0, 0, 0] as [number, number, number];
+    visualNodes.find((node) => node.id === nodeId)?.position ?? [0, 0, 0] as [number, number, number];
 
   const isNodeOnRoute = (nodeId: number) => routePath?.includes(nodeId) ?? false;
 
@@ -68,14 +52,13 @@ const NavigationGraph: React.FC<NavigationGraphProps> = ({ routePath, children }
         return React.cloneElement(
           nodeElement,
           {
-            onRegister: handleRegister,
-            isOnRoute: isNodeOnRoute(nodeProps.id),
+            isOnRoute: isNodeOnRoute(nodeProps.nodeId),
           },
         );
       })}
       {/* CONEXIONES */}
 
-      {nodes.map((node) =>
+      {navigationNodes.map((node) =>
 
         node.connections.map(
           (connectionId) => {
@@ -91,7 +74,7 @@ const NavigationGraph: React.FC<NavigationGraphProps> = ({ routePath, children }
 
 
             const connectedNode =
-              nodes.find(
+              navigationNodes.find(
                 (otherNode) =>
                   otherNode.id ===
                   connectionId
@@ -196,182 +179,112 @@ export const MainScene: React.FC = () => {
 
   {/* ==================== PISO 1 ==================== */}
 
-  <NavigationNode
-    id={1}
-    kind="Entrada"
-    tags={['entrada']}
-    connections={[2]}
-  >
-    <mesh position={[0, 0, 0]}>
+  <NavigationNodeView nodeId={1} position={[0, 0, 0]}>
+    <mesh>
       <boxGeometry args={[0.5, 0.5, 0.5]} />
       <meshStandardMaterial color="#38bdf8" transparent opacity={0.65} />
     </mesh>
-  </NavigationNode>
+  </NavigationNodeView>
 
-  <NavigationNode
-    id={2}
-    kind="otro"
-    tags={['Conexion']}
-    connections={[1, 3, 10]}
-  >
-    <mesh position={[0, 0, 2]}>
+  <NavigationNodeView nodeId={2} position={[0, 0, 2]}>
+    <mesh>
       <boxGeometry args={[0.5, 0.5, 0.5]} />
       <meshStandardMaterial color="#38bdf8" transparent opacity={0.65} />
     </mesh>
-  </NavigationNode>
+  </NavigationNodeView>
 
-  <NavigationNode
-    id={3}
-    kind="escalera"
-    tags={['Escalera']}
-    connections={[2, 4]}
-  >
-    <mesh position={[-2, 0.5, 1.5]}>
+  <NavigationNodeView nodeId={3} position={[-2, 0.5, 1.5]}>
+    <mesh>
       <boxGeometry args={[0.5, 0.5, 0.5]} />
       <meshStandardMaterial color="#38bdf8" transparent opacity={0.65} />
     </mesh>
-  </NavigationNode>
+  </NavigationNodeView>
 
-  <NavigationNode
-    id={4}
-    kind="otro"
-    tags={['Conexion']}
-    connections={[3, 5]}
-  >
-    <mesh position={[0, 1, 1]}>
+  <NavigationNodeView nodeId={4} position={[0, 1, 1]}>
+    <mesh>
       <boxGeometry args={[0.5, 0.5, 0.5]} />
       <meshStandardMaterial color="#38bdf8" transparent opacity={0.65} />
     </mesh>
-  </NavigationNode>
+  </NavigationNodeView>
 
-  <NavigationNode
-    id={5}
-    kind="otro"
-    tags={['Conexion']}
-    connections={[4, 6, 9]}
-  >
-    <mesh position={[0, 1, 3]}>
+  <NavigationNodeView nodeId={5} position={[0, 1, 3]}>
+    <mesh>
       <boxGeometry args={[0.5, 0.5, 0.5]} />
       <meshStandardMaterial color="#38bdf8" transparent opacity={0.65} />
     </mesh>
-  </NavigationNode>
+  </NavigationNodeView>
 
-  <NavigationNode
-    id={6}
-    kind="pasillo"
-    tags={['Corredor']}
-    connections={[5, 7, 8]}
-  >
-    <mesh position={[0, 1, 5]}>
+  <NavigationNodeView nodeId={6} position={[0, 1, 5]}>
+    <mesh>
       <boxGeometry args={[0.5, 0.5, 0.5]} />
       <meshStandardMaterial color="#38bdf8" transparent opacity={0.65} />
     </mesh>
-  </NavigationNode>
+  </NavigationNodeView>
 
-  <NavigationNode
-    id={7}
-    kind="administracion"
-    tags={['Decanatura.Ing']}
-    connections={[6]}
-  >
-    <mesh position={[2, 1, 5]}>
+  <NavigationNodeView nodeId={7} position={[2, 1, 5]}>
+    <mesh>
       <boxGeometry args={[0.5, 0.5, 0.5]} />
       <meshStandardMaterial color="#38bdf8" transparent opacity={0.65} />
     </mesh>
-  </NavigationNode>
+  </NavigationNodeView>
 
-  <NavigationNode
-    id={8}
-    kind="administracion"
-    tags={['Facultad De Ingenieria']}
-    connections={[6]}
-  >
-    <mesh position={[-2, 1, 5]}>
+  <NavigationNodeView nodeId={8} position={[-2, 1, 5]}>
+    <mesh>
       <boxGeometry args={[0.5, 0.5, 0.5]} />
       <meshStandardMaterial color="#38bdf8" transparent opacity={0.65} />
     </mesh>
-  </NavigationNode>
+  </NavigationNodeView>
 
-  <NavigationNode
-    id={9}
-    kind="pasillo"
-    tags={['Corredor']}
-    connections={[5, 11]}
-  >
-    <mesh position={[-2, 1, 3]}>
+  <NavigationNodeView nodeId={9} position={[-2, 1, 3]}>
+    <mesh>
       <boxGeometry args={[0.5, 0.5, 0.5]} />
       <meshStandardMaterial color="#38bdf8" transparent opacity={0.65} />
     </mesh>
-  </NavigationNode>
+  </NavigationNodeView>
 
 
   {/* ==================== SEGUNDA ESCALERA ==================== */}
 
-  <NavigationNode
-    id={10}
-    kind="escalera"
-    tags={['Escalera']}
-    connections={[2, 11]}
-  >
-    <mesh position={[-4, 0.5, 2]}>
+  <NavigationNodeView nodeId={10} position={[-4, 0.5, 2]}>
+    <mesh>
       <boxGeometry args={[0.5, 0.5, 0.5]} />
       <meshStandardMaterial color="#38bdf8" transparent opacity={0.65} />
     </mesh>
-  </NavigationNode>
+  </NavigationNodeView>
 
 
   {/* ==================== PASILLO HACIA SALONES ==================== */}
 
-  <NavigationNode
-    id={11}
-    kind="pasillo"
-    tags={['Corredor']}
-    connections={[10, 9, 12, 13, 14]}
-  >
-    <mesh position={[-4, 1, 3]}>
+  <NavigationNodeView nodeId={11} position={[-4, 1, 3]}>
+    <mesh>
       <boxGeometry args={[0.5, 0.5, 0.5]} />
       <meshStandardMaterial color="#38bdf8" transparent opacity={0.65} />
     </mesh>
-  </NavigationNode>
+  </NavigationNodeView>
 
 
   {/* ==================== SALONES ==================== */}
 
-  <NavigationNode
-    id={12}
-    kind="salon"
-    tags={['Salon']}
-    connections={[11]}
-  >
-    <mesh position={[-4, 1, 5]}>
+  <NavigationNodeView nodeId={12} position={[-4, 1, 5]}>
+    <mesh>
       <boxGeometry args={[0.5, 0.5, 0.5]} />
       <meshStandardMaterial color="#38bdf8" transparent opacity={0.65} />
     </mesh>
-  </NavigationNode>
+  </NavigationNodeView>
 
-  <NavigationNode
-    id={13}
-    kind="salon"
-    tags={['Salon']}
-    connections={[11]}
-  >
-    <mesh position={[-6, 1, 5]}>
+  <NavigationNodeView nodeId={13} position={[-6, 1, 5]}>
+    <mesh>
       <boxGeometry args={[0.5, 0.5, 0.5]} />
       <meshStandardMaterial color="#38bdf8" transparent opacity={0.65} />
     </mesh>
-  </NavigationNode>
+  </NavigationNodeView>
 
-  <NavigationNode
-    id={14}
-    kind="salon"
-    tags={['Salon']}
-    connections={[11]}
-  >
-    <mesh position={[-8, 1, 5]}>
+  <NavigationNodeView nodeId={14} position={[-8, 1, 5]}>
+    <mesh>
       <boxGeometry args={[0.5, 0.5, 0.5]} />
       <meshStandardMaterial color="#38bdf8" transparent opacity={0.65} />
     </mesh>
-  </NavigationNode>
+  </NavigationNodeView>
 
 </NavigationGraph>
 
