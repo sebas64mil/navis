@@ -1,4 +1,4 @@
-import type { Location } from '../types/location';
+import type { Location } from '../../types/location';
 
 const CATEGORY_ALIASES: Record<string, Location['category']> = {
   facultad: 'facultad',
